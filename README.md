@@ -1,8 +1,8 @@
-# AppEngine Flexible Environtment for TensorFlow Photo Analysis
+# AppEngine Flexible Environment for TensorFlow Photo Analysis
 
-To use this demonstration, the TensorFlow Object Detection API should be used. For more details here.
+To use this demonstration, the TensorFlow Object Detection API should be used. For more details [here](https://github.com/tensorflow/models/tree/master/object_detection).
 
-To use this example you will need these minimum elements of TensorFlow Object Detection API:
+To use this example you will need these minimum elements of [TensorFlow Object Detection API](https://github.com/tensorflow/models/tree/master/object_detection):
 
 * Models [folder]
 * Proto [folder]
@@ -22,3 +22,13 @@ Note: if you need download the functional file, [here](https://storage.googleapi
 
 The common structure of the project would be:
 ![common structure](https://storage.googleapis.com/appengine_tensorflow/post_appengine_tensor_1.png)
+
+# Deploy the project
+
+Note: You should have the [Google Cloud SDK](https://cloud.google.com/sdk/docs/). More information about App Engine Flexible environment, Python [here](https://cloud.google.com/appengine/docs/flexible/python/quickstart)
+
+Local:
+Python main.py
+
+Production Environment:
+Gcloud app deploy (-v version) if you want to deploy it to a specific version.
