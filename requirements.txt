@@ -2,3 +2,6 @@ Flask==0.12.2
 gunicorn==19.7.1
 tensorflow==1.2.1
 numpy==1.13.1
+Pillow==4.2.1
+image==1.5.5
+gcloud==0.18.3
