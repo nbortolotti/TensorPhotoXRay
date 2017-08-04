@@ -1,27 +1,21 @@
 import logging
-
 import cStringIO
 import urllib
-
 import os
 import sys
-
 import numpy as np
 import tensorflow as tf
 from PIL import Image
-from gcloud import storage
 
 from flask import Flask, send_file, render_template
+from utils import label_map_util
 
 app = Flask(__name__)
-
 sys.path.append("..")
 
-from utils import label_map_util
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-# MODEL_NAME = 'faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017'
 MODEL_NAME = 'ssd_mobilenet_v1_coco_11_06_2017'
 
 MODEL_FILE = MODEL_NAME + '.tar.gz'
