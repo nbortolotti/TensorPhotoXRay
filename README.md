@@ -15,7 +15,7 @@ In addition we need to have the frozen_inference_graph of the model in our solut
 
 Note: if you need download the functional file, [here](https://storage.googleapis.com/appengine_tensorflow/ssd_mobilenet_v1_coco_11_06_2017.zip) I prepare a working version.
 
-We for our example we use COCO as an object recognition scheme, we need the recognition tags for our analysis.
+For our example we use COCO as an object recognition scheme, we need the recognition tags for our analysis.
 * data/mscoco_label_map.pbtxt
 
 Note: if you need download the functional file, [here](https://storage.googleapis.com/appengine_tensorflow/data.zip) I prepare a working version.
@@ -28,7 +28,9 @@ The common structure of the project would be:
 Note: You should have the [Google Cloud SDK](https://cloud.google.com/sdk/docs/). More information about App Engine Flexible environment, Python [here](https://cloud.google.com/appengine/docs/flexible/python/quickstart)
 
 Local:
-Python main.py
+python main.py
 
 Production Environment:
-Gcloud app deploy (-v version) if you want to deploy it to a specific version.
+gcloud app deploy 
+
+*(-v version) if you want to deploy it to a specific version.
