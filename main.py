@@ -1,171 +1,21 @@
 import logging
-
 import cStringIO
 import urllib
-
 import os
 import sys
-
 import numpy as np
 import tensorflow as tf
 from PIL import Image
-from gcloud import storage
 
 from flask import Flask, send_file, render_template
-from flask import jsonify
+from utils import label_map_util
 
 app = Flask(__name__)
-
-
-@app.route('/<number>')
-def tensor_regression(number):
-    train_X = np.array([
-        [2.0658746e+00],
-        [2.3684087e+00],
-        [2.5399929e+00],
-        [2.5420804e+00],
-        [2.5490790e+00],
-        [2.7866882e+00],
-        [2.9116825e+00],
-        [3.0356270e+00],
-        [3.1146696e+00],
-        [3.1582389e+00],
-        [3.3275944e+00],
-        [3.3793165e+00],
-        [3.4122006e+00],
-        [3.4215823e+00],
-        [3.5315732e+00],
-        [3.6393002e+00],
-        [3.6732537e+00],
-        [3.9256462e+00],
-        [4.0498646e+00],
-        [4.2483348e+00],
-        [4.3440052e+00],
-        [4.3826531e+00],
-        [4.4230602e+00],
-        [4.6102443e+00],
-        [4.6881183e+00],
-        [4.9777333e+00],
-        [5.0359967e+00],
-        [5.0684536e+00],
-        [5.4161491e+00],
-        [5.4395623e+00],
-        [5.4563207e+00],
-        [5.5698458e+00],
-        [5.6015729e+00],
-        [5.6877617e+00],
-        [5.7215602e+00],
-        [5.8538914e+00],
-        [6.1978026e+00],
-        [6.3510941e+00],
-        [6.4797033e+00],
-        [6.7383791e+00],
-        [6.8637686e+00],
-        [7.0223387e+00],
-        [7.0782373e+00],
-        [7.1514232e+00],
-        [7.4664023e+00],
-        [7.5973874e+00],
-        [7.7440717e+00],
-        [7.7729662e+00],
-        [7.8264514e+00],
-        [7.9306356e+00]
-    ]
-    ).astype('float32')
-
-    mean = np.mean(train_X, axis=0)
-    std = np.std(train_X, axis=0)
-
-    # a = tf.placeholder("float")
-    # b = tf.placeholder("float")
-    #
-    # y = tf.multiply(a, b)
-    #
-    # with tf.Session() as sess:
-    #
-    #     result = str(sess.run(y, feed_dict={a: 5, b: 5}))
-    #
-    #     client = storage.Client('lookthiscode-521')
-    #     bucket = client.bucket('lookthiscode-521')
-    #     blob = bucket.blob('my-model')
-    #
-    #
-    #     #return result
-    # inputs
-
-    # X = tf.placeholder(tf.float32, [m, n])
-    # Y = tf.placeholder(tf.float32, [m, 1])
-
-    # weight and bias
-    # W = tf.Variable(tf.zeros([n, 1], dtype=np.float32), name="weight")
-    # b = tf.Variable(tf.zeros([1], dtype=np.float32), name="bias")
-
-    # linear model
-    # with tf.name_scope("linear_Wx_b") as scope:
-    #    activation = tf.add(tf.matmul(X, W), b)
-
-    # cost
-    # with tf.name_scope("cost") as scope:
-    #    cost = tf.reduce_sum(tf.square(activation - Y)) / (2 * m)
-    #    tf.summary.scalar("cost", cost)
-
-    # train
-    # with tf.name_scope("train") as scope:
-    #    optimizer = tf.train.GradientDescentOptimizer(0.07).minimize(cost)
-
-    # saver = tf.train.Saver()
-
-    # tensorflow session
-    with tf.Session() as sess:
-
-        client = storage.Client('lookthiscode-521')
-        bucket = client.bucket('models_lookthiscode')
-
-        meta_file = 'my-model.ckpt.meta'
-        if not os.path.isfile(meta_file):
-            blob = bucket.blob(meta_file)
-            with open(meta_file, 'w') as f:
-                blob.download_to_file(f)
-
-        check_file = 'checkpoint'
-        if not os.path.isfile(check_file):
-            blob1 = bucket.blob(check_file)
-            with open(check_file, 'w') as f:
-                blob1.download_to_file(f)
-
-        index_file = 'my-model.ckpt.index'
-        if not os.path.isfile(index_file):
-            blob2 = bucket.blob(index_file)
-            with open(index_file, 'w') as f:
-                blob2.download_to_file(f)
-
-        data_file = 'my-model.ckpt.data-00000-of-00001'
-        if not os.path.isfile(data_file):
-            blob3 = bucket.blob(data_file)
-            with open(data_file, 'w') as f:
-                blob3.download_to_file(f)
-
-        saver = tf.train.import_meta_graph('my-model.ckpt.meta')
-        saver.restore(sess, tf.train.latest_checkpoint('./'))
-
-        predict_X_2 = np.array([float(number)], dtype=np.float32).reshape([1, 1])
-        predict_X_2 = (predict_X_2 - mean) / std
-
-        graph = tf.get_default_graph()
-        W = graph.get_tensor_by_name("weight:0")
-        b = graph.get_tensor_by_name("bias:0")
-
-        predict_Y_2 = tf.add(tf.matmul(predict_X_2, W), b)
-        return str(sess.run(predict_Y_2))
-
-
 sys.path.append("..")
 
-from utils import label_map_util
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-# MODEL_NAME = 'faster_rcnn_inception_resnet_v2_atrous_coco_11_06_2017'
 MODEL_NAME = 'ssd_mobilenet_v1_coco_11_06_2017'
 
 MODEL_FILE = MODEL_NAME + '.tar.gz'
