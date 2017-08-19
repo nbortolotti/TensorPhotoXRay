@@ -1,3 +1,4 @@
+import json
 import logging
 import cStringIO
 import urllib
@@ -6,6 +7,7 @@ import sys
 import numpy as np
 import tensorflow as tf
 from PIL import Image
+
 
 from flask import Flask, send_file, render_template
 from utils import label_map_util
@@ -104,6 +106,15 @@ def tensor_photo(photo_url):
         list = str(list_elements)
         return render_template('index.html', **locals())
 
+
+@app.route('/photobot/<path:photo_url>')
+def tensor_photobot(photo_url):
+    file = cStringIO.StringIO(urllib.urlopen(photo_url).read())
+    img = Image.open(file)
+
+    if img:
+        list_elements = process_image(img)
+        return json.dumps(list_elements)
 
 
 @app.errorhandler(500)
