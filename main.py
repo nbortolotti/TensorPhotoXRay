@@ -9,8 +9,8 @@ import tensorflow as tf
 from PIL import Image
 
 
-from flask import Flask, send_file, render_template
-from utils import label_map_util
+from flask import Flask, render_template
+from object_detection.utils import label_map_util
 
 app = Flask(__name__)
 sys.path.append("..")
@@ -18,12 +18,12 @@ sys.path.append("..")
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-MODEL_NAME = 'ssd_mobilenet_v1_coco_11_06_2017'
+MODEL_NAME = 'faster_rcnn_inception_resnet_v2_atrous_coco_2017_11_08'
 
 MODEL_FILE = MODEL_NAME + '.tar.gz'
 DOWNLOAD_BASE = 'http://download.tensorflow.org/models/object_detection/'
 PATH_TO_CKPT = MODEL_NAME + '/frozen_inference_graph.pb'
-PATH_TO_LABELS = os.path.join('data', 'mscoco_label_map.pbtxt')
+PATH_TO_LABELS = os.path.join('object_detection/data', 'mscoco_label_map.pbtxt')
 NUM_CLASSES = 90
 
 label_map = label_map_util.load_labelmap(PATH_TO_LABELS)
@@ -95,7 +95,11 @@ def process_image(image):
             return alert_array
 
 
-@app.route('/photo/<path:photo_url>')
+@app.route('/')
+def tensorxraywelcome():
+    return render_template('welcome.html', **locals())
+
+@app.route('/photo/<path:photo_url>', methods=['GET'])
 def tensor_photo(photo_url):
     url = photo_url
     file = cStringIO.StringIO(urllib.urlopen(photo_url).read())
@@ -107,8 +111,17 @@ def tensor_photo(photo_url):
         return render_template('index.html', **locals())
 
 
-@app.route('/photobot/<path:photo_url>')
+@app.route('/photobot/<path:photo_url>', methods=['GET'])
 def tensor_photobot(photo_url):
+    file = cStringIO.StringIO(urllib.urlopen(photo_url).read())
+    img = Image.open(file)
+
+    if img:
+        list_elements = process_image(img)
+        return json.dumps(list_elements)
+
+@app.route('/arloimage/<path:photo_url>', methods=['GET'])
+def tensor_arloimage(photo_url):
     file = cStringIO.StringIO(urllib.urlopen(photo_url).read())
     img = Image.open(file)
 

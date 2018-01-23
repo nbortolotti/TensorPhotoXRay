@@ -4,21 +4,25 @@ To use this demonstration, the TensorFlow Object Detection API should be used. F
 
 To use this example you will need these minimum elements of [TensorFlow Object Detection API](https://github.com/tensorflow/models/tree/master/object_detection):
 
-* Models [folder]
-* Proto [folder]
-* Utils [folder]
+Object model, quick option to automatize the deploy:
 
-Note: if you need download the functional file, [here](https://storage.googleapis.com/appengine_tensorflow/object_detection_api.zip) I prepare a working version.
+``` 
+git clone https://github.com/tensorflow/models.git
+```
+*validate dependency with protoc tool
 
-In addition we need to have the frozen_inference_graph of the model in our solution. For our example:
-* Ssd_mobilenet_v1_coco_11_06_2017
+```
+protoc ./models/research/object_detection/protos/string_int_label_map.proto --python_out=.
+```
 
-Note: if you need download the functional file, [here](https://storage.googleapis.com/appengine_tensorflow/ssd_mobilenet_v1_coco_11_06_2017.zip) I prepare a working version.
+```
+cp -R models/research/object_detection/ object_detection/
+```
+```
+rm -rf model
+```
 
-For our example we use COCO as an object recognition scheme, we need the recognition tags for our analysis.
-* data/mscoco_label_map.pbtxt
-
-Note: if you need download the functional file, [here](https://storage.googleapis.com/appengine_tensorflow/data.zip) I prepare a working version.
+for this example I used the model: faster_rcnn_inception_resnet_v2_atrous_coco_2017_11_08
 
 The common structure of the project would be:
 ![common structure](https://storage.googleapis.com/appengine_tensorflow/post_appengine_tensor_1.png)
