@@ -22,10 +22,8 @@ cp -R models/research/object_detection/ object_detection/
 rm -rf model
 ```
 
-for this example I used the model: faster_rcnn_inception_resnet_v2_atrous_coco_2017_11_08
+You can use the preferred model: faster_rcnn_inception_resnet_v2_atrous_coco_2017_11_08 or as another like faster_rcnn_inception_v2_coco_2017_11_08
 
-The common structure of the project would be:
-![common structure](https://storage.googleapis.com/appengine_tensorflow/post_appengine_tensor_1.png)
 
 # Deploy the project
 
