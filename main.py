@@ -18,7 +18,7 @@ sys.path.append("..")
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-MODEL_NAME = 'faster_rcnn_inception_resnet_v2_atrous_coco_2017_11_08'
+MODEL_NAME = 'faster_rcnn_inception_v2_coco_2017_11_08'
 
 MODEL_FILE = MODEL_NAME + '.tar.gz'
 DOWNLOAD_BASE = 'http://download.tensorflow.org/models/object_detection/'
@@ -79,25 +79,25 @@ def load_image_into_numpy_array(image):
         (im_height, im_width, 3)).astype(np.uint8)
 
 
-detection_graph = tf.Graph()
-with detection_graph.as_default():
-    od_graph_def = tf.GraphDef()
-    with tf.gfile.GFile(PATH_TO_CKPT, 'rb') as fid:
-        serialized_graph = fid.read()
-        od_graph_def.ParseFromString(serialized_graph)
-        tf.import_graph_def(od_graph_def, name='')
-
-
 def process_image(image):
+    detection_graph = tf.Graph()
+    with detection_graph.as_default():
+        od_graph_def = tf.GraphDef()
+        with tf.gfile.GFile(PATH_TO_CKPT, 'rb') as fid:
+            serialized_graph = fid.read()
+            od_graph_def.ParseFromString(serialized_graph)
+            tf.import_graph_def(od_graph_def, name='')
+
     with detection_graph.as_default():
         with tf.Session(graph=detection_graph) as sess:
             alert_array = detect_objects(image, sess, detection_graph)
             return alert_array
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def tensorxraywelcome():
     return render_template('welcome.html', **locals())
+
 
 @app.route('/photo/<path:photo_url>', methods=['GET'])
 def tensor_photo(photo_url):
