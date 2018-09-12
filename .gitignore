@@ -6,3 +6,5 @@ my-model.data-00000-of-00001
 my-model.index
 my-model.meta
 ssd_mobilenet_v1_coco_11_06_2017/frozen_inference_graph.pb
+object_detection/
+.idea/

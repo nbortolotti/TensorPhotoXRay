@@ -1,6 +1,6 @@
-Flask==0.12.2
-gunicorn==19.7.1
+Flask
+gunicorn
 tensorflow
-numpy==1.13.1
-Pillow==4.2.1
-gcloud==0.18.3
+numpy
+Pillow
+gcloud
